@@ -1,0 +1,52 @@
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# --- Env / secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# --- Node / JS ---
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+.turbo/
+.next/
+out/
+
+# --- Expo / React Native ---
+.expo/
+.expo-shared/
+apps/mobile/android/
+apps/mobile/ios/
+*.apk
+*.aab
+*.ipa
+*.jks
+*.keystore
+
+# --- Logs ---
+*.log
+npm-debug.log*
+pnpm-debug.log*
