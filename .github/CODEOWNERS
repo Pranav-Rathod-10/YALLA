@@ -1,0 +1,9 @@
+# Default reviewers for everything
+*                   @Pranav-Rathod-10 @kadeep47
+
+# Backend
+/services/          @kadeep47
+/infra/             @kadeep47
+
+# Frontends
+/apps/              @Pranav-Rathod-10
