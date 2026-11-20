@@ -1,0 +1,25 @@
+# Shared ruff config. Formatting is owned by black; ruff only lints.
+target-version = "py312"
+line-length = 100
+extend-exclude = ["**/alembic/versions/*"]
+
+[lint]
+select = [
+  "E", "W",   # pycodestyle
+  "F",        # pyflakes
+  "I",        # isort
+  "B",        # bugbear
+  "UP",       # pyupgrade
+  "SIM",      # simplify
+  "N",        # naming
+  "S",        # bandit (security)
+  "ASYNC",    # async pitfalls
+  "RUF",
+]
+ignore = ["E501"]  # black handles line length
+
+[lint.per-file-ignores]
+"**/tests/**" = ["S101", "S105", "S106"]
+
+[lint.isort]
+known-first-party = ["app"]

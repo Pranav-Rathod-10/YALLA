@@ -1,0 +1,5 @@
+# Repo-level tool config only. Each Python service has its own pyproject.
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+extend-exclude = "alembic/versions"
