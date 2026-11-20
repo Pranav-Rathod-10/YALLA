@@ -1,6 +1,6 @@
-# Bla Bla Goa: Frontend Specification
+# Yalla: Frontend Specification
 
-Hand this file to any coding agent. It describes the mobile app's screens, flows, design tokens, data and rules. The companion file `BlaBlaGoa_prototype.html` is a clickable prototype of everything below. Open it in a browser and treat it as the visual source of truth. This file is the written source of truth. If the two disagree, ask the owner.
+Hand this file to any coding agent. It describes the mobile app's screens, flows, design tokens, data and rules. The companion file `prototype.html` is a clickable prototype of everything below. Open it in a browser and treat it as the visual source of truth. This file is the written source of truth. If the two disagree, ask the owner.
 
 Scope: frontend only (iOS and Android). The backend does not exist yet. Section 12 proposes the data contract the frontend expects, and Section 13 lists what is not designed yet.
 
@@ -8,13 +8,15 @@ Scope: frontend only (iOS and Android). The backend does not exist yet. Section 
 
 ## 1. Product in one paragraph
 
-Bla Bla Goa is a trip-sharing app for Goa. A user posts a cab trip (destination, starting point, date, a departure window of at most 30 minutes, and 1 to 3 seats). A host can mark a trip **Females only**, which adds a label to its card on the Trips page. Other users browse trips, filter them, and send a request to join. The host accepts or declines each request. A Social tab lists big concerts and offers one-tap "Home to Concert" and "Concert to Home" ride searches.
+> Renamed from "Bla Bla Goa" to **Yalla** and widened from Goa-only to any city (decision: YAL-001, see `docs/tracker/features.csv`). Sample data below still uses Goa places; the backend seeds several cities.
+
+Yalla is a cab trip-sharing app that works in any city. A user posts a cab trip (destination, starting point, date, a departure window of at most 30 minutes, and 1 to 3 seats). A host can mark a trip **Females only**, which adds a label to its card on the Trips page. Other users browse trips, filter them, and send a request to join. The host accepts or declines each request. A Social tab lists big concerts and offers one-tap "Home to Concert" and "Concert to Home" ride searches.
 
 Business model, payments, chat and ratings logic are not decided yet (see Section 13).
 
 ## 2. Branding and legal notes
 
-- App name: **Bla Bla Goa**. Logo for now: a white cab icon above the name on brand green. It is a first draft.
+- App name: **Yalla**. Logo for now: a white cab icon above the name on brand green. It is a first draft.
 - The layouts were inspired by a sports-partner app the owner uses as a reference. Do not copy that app's name, logo, illustrations, wording or colours. The prototype already uses original wording and simple original illustrations. Keep it that way.
 - All people, concerts, venues and prices in this spec are made-up sample data.
 - Ad slot on Trip details is an optional placeholder only. No ad network is chosen.
@@ -122,19 +124,19 @@ Back arrows return to the previous screen. Tab switches replace the stack. The h
 ## 6. Shared header (tab screens)
 
 - Left: avatar circle (44) with the user's initial (photo later), tap opens Profile.
-- Next to it: "Hey {firstName}!" (19, weight 600) and below it the user's city with a chevron, in green (`Panjim, Goa`). The city picker is not designed yet.
+- Next to it: "Hey {firstName}!" (19, weight 600) and below it the user's city with a chevron, in green (sample: `Panjim, Goa`). The city picker is not designed yet. The app is not tied to one city: city, places and events come from the backend.
 - Right: bell icon only, tap opens Alerts. (Chat and calendar icons were removed on purpose.)
 
 ## 7. Screens
 
 ### 7.1 Splash
-Full-screen `brand` background. Centered: white cab icon (about 130 wide) above "Bla Bla Goa" (Space Grotesk 700, 38, white, centered). Fades in. After about 2.2 seconds go to Home (later: Login if signed out).
+Full-screen `brand` background. Centered: white cab icon (about 130 wide) above "Yalla" (Space Grotesk 700, 38, white, centered). Fades in. After about 2.2 seconds go to Home (later: Login if signed out).
 
 ### 7.2 Home (tab)
 Gray page with a white header. Scrollable gray area with rounded top corners.
 - A 2 by 2 grid of shortcut cards, each with an uppercase Space Grotesk title, a short line, and an illustration at the bottom right: **Trips** ("Find trips. Join the ride"), **Requests** ("Track your requests"), **Post a trip** ("Plan it. Post it."), **Social** ("Rides to big concerts."). They map to the four destinations in Section 5.
 - A wide card **Weekend getaways** ("Quick trips this Sat and Sun"). No action yet.
-- A blue block (`timePill`) titled **Bla Bla Goa Picks** with three white cards: Beach hopping, Falls and treks, Heritage drives. No action yet.
+- A blue block (`timePill`) titled **Yalla Picks** with three white cards: Beach hopping, Falls and treks, Heritage drives. No action yet.
 
 ### 7.3 Trips (tab)
 - Header, then a date strip: a vertical "NOV" month label and days (Today, then weekday names with day numbers). One day is selected (green circle). **Currently visual only. It does not filter yet.**
@@ -217,7 +219,7 @@ Back arrow and centered title **Alerts**. A list of rows: avatar with initial, t
 - Card 1 (kept from the owner's reference): avatar (92), stats **Trips 12, Buddies 78, Rating 4.8**, the user's name, `Last trip on 14th November`. There is no verification tag.
 - Card **About you**: rows Age, Gender, Home base, Member since, each with a value on the right and a chevron. (Values are samples.)
 - Card **Settings**: Edit profile, Notifications, Privacy and safety, Language (English), Help and support, About.
-- Full-width outlined red **Log out** button, then `Bla Bla Goa v0.1` in small grey text.
+- Full-width outlined red **Log out** button, then `Yalla v0.1` in small grey text.
 
 ## 8. Bottom sheets
 
@@ -261,7 +263,7 @@ Half-height sheet from the bottom. Concert name, then `{date} · {address}. Find
 ## 10. Copy deck (exact strings)
 
 - Tabs: Home, Trips, Requests, Social.
-- Home cards: "Trips / Find trips. Join the ride", "Requests / Track your requests", "Post a trip / Plan it. Post it.", "Social / Rides to big concerts.", "Weekend getaways / Quick trips this Sat and Sun", "Bla Bla Goa Picks", "Beach hopping / Sun, sand and shacks", "Falls and treks / Monsoon and beyond", "Heritage drives / Old Goa to Fontainhas".
+- Home cards: "Trips / Find trips. Join the ride", "Requests / Track your requests", "Post a trip / Plan it. Post it.", "Social / Rides to big concerts.", "Weekend getaways / Quick trips this Sat and Sun", "Yalla Picks", "Beach hopping / Sun, sand and shacks", "Falls and treks / Monsoon and beyond", "Heritage drives / Old Goa to Fontainhas".
 - Trips: "Filter by", "Destination", "Start point", "Departure time", "Explore all trips", "POST A TRIP".
 - Trip details: "Trip details", "Dates", "Vehicle", "Cost per person", "Seats left", "Host approval", "Cost shared", "Travellers", "Send Query", "Request to Join", "Request sent".
 - Post a Trip: "Post a Trip", "Destination", "Starting from", "Date", "Departure time", "Seats available", "Joining", "Host approval", "Instant join", "Females only", "SHARE COST", "Post Trip".
