@@ -28,7 +28,7 @@ async def _trip(session: AsyncSession, **overrides: object) -> Trip:
         "depart_date": date(2030, 1, 1),
         "window_start": time(18, 0),
         "window_minutes": 30,
-        "seats_total": 3,
+        "passenger_seats": 2,
     }
     fields.update(overrides)
     trip = Trip(**fields)
@@ -39,13 +39,18 @@ async def _trip(session: AsyncSession, **overrides: object) -> Trip:
 
 async def test_trip_defaults(session: AsyncSession) -> None:
     trip = await _trip(session)
-    assert trip.going == 1
+    assert trip.seats_taken == 0
     assert trip.status == "open"
 
 
 @pytest.mark.parametrize(
     "overrides",
-    [{"window_minutes": 45}, {"seats_total": 5}, {"going": 4}, {"cost_per_person": -1}],
+    [
+        {"window_minutes": 45},
+        {"passenger_seats": 4},
+        {"seats_taken": 3},
+        {"cost_per_person": -1},
+    ],
 )
 async def test_trip_constraints(session: AsyncSession, overrides: dict[str, object]) -> None:
     with pytest.raises(IntegrityError):

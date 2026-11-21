@@ -29,15 +29,15 @@ async def test_post_trip_applies_spec_defaults(
     places = await add_places(session)
     headers = await login(name="Pranav R")
     r = await client.post(
-        "/v1/trips", json=trip_body(places, "Panjim", "Vagator", seats=2), headers=headers
+        "/v1/trips", json=trip_body(places, "Panjim", "Vagator", passenger_seats=2), headers=headers
     )
     assert r.status_code == 201, r.text
     trip = r.json()
     assert trip["title"] == "Trip to Vagator"
     assert trip["tag"] == "Cab trip"
     assert trip["pickup"] == "Panjim"
-    # Spec 7.5: total = seats + 1 and going = 1 (host counted).
-    assert (trip["seats_total"], trip["going"], trip["seats_left"]) == (3, 1, 2)
+    # YAL-B03: seats count passengers only; the host is never a seat.
+    assert (trip["passenger_seats"], trip["seats_taken"], trip["seats_left"]) == (2, 0, 2)
     assert trip["joining"] == "approval"
     assert trip["females_only"] is False
     assert trip["host"]["name"] == "Pranav R"
@@ -61,7 +61,7 @@ async def test_post_trip_validation(
 ) -> None:
     places = await add_places(session)
     headers = await login()
-    for bad in ({"seats": 4}, {"seats": 0}, {"window_minutes": 45}):
+    for bad in ({"passenger_seats": 4}, {"passenger_seats": 0}, {"window_minutes": 45}):
         r = await client.post(
             "/v1/trips", json=trip_body(places, "Panjim", "Vagator", **bad), headers=headers
         )

@@ -42,7 +42,7 @@ async def _to_out(session: AsyncSession, trip: Trip) -> TripOut:
         **{k: getattr(trip, k) for k in TripOut.model_fields if hasattr(Trip, k)},
         from_place=await _place(session, trip.from_place_id),
         to_place=await _place(session, trip.to_place_id),
-        seats_left=trip.seats_total - trip.going,
+        seats_left=trip.passenger_seats - trip.seats_taken,
         host=UserSummary.model_validate(host),
     )
 
@@ -62,9 +62,8 @@ async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> Tr
         depart_date=data.depart_date,
         window_start=data.window_start,
         window_minutes=data.window_minutes,
-        # Spec 7.5: total = seats + 1, going = 1 (the host).
-        seats_total=data.seats + 1,
-        going=1,
+        passenger_seats=data.passenger_seats,
+        seats_taken=0,
         vehicle=data.vehicle,
         cost_per_person=data.cost_per_person,
         cost_shared=data.cost_shared,
