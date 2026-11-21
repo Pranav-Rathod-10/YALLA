@@ -14,6 +14,7 @@ Versions follow [SemVer](https://semver.org).
 - Feature tracker CSV, proposal template, contributing guide.
 - Join requests: send (optional 1024-char message), accept, decline, cancel, Sent/Received lists; instant join; row-locked seats (YAL-022).
 - Females only enforced on the server (visible to all, only women can request or instant-join); can_request on trip responses (YAL-023, ADR 0007).
+- Events list (any city, local times) and Home to Event / Event to Home ride search using the user's home place (YAL-024).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).

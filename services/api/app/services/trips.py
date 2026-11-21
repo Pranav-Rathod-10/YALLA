@@ -27,7 +27,7 @@ class PastDateError(DomainError):
     code, title = "past_date", "Date is in the past"
 
 
-async def _place(session: AsyncSession, place_id: uuid.UUID) -> PlaceOut:
+async def load_place(session: AsyncSession, place_id: uuid.UUID) -> PlaceOut:
     row = (
         await session.execute(select(*place_columns()).where(Place.id == place_id))
     ).one_or_none()
@@ -46,8 +46,8 @@ async def _to_out(session: AsyncSession, trip: Trip, viewer: User) -> TripOut:
         **{k: getattr(trip, k) for k in TripOut.model_fields if hasattr(Trip, k)}
         | {"departs_at": departs_at},
         window_ends_at=departs_at + timedelta(minutes=trip.window_minutes),
-        from_place=await _place(session, trip.from_place_id),
-        to_place=await _place(session, trip.to_place_id),
+        from_place=await load_place(session, trip.from_place_id),
+        to_place=await load_place(session, trip.to_place_id),
         seats_left=trip.passenger_seats - trip.seats_taken,
         host=UserSummary.model_validate(host),
         can_request=can_request(viewer, trip),
@@ -55,8 +55,8 @@ async def _to_out(session: AsyncSession, trip: Trip, viewer: User) -> TripOut:
 
 
 async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> TripOut:
-    to_place = await _place(session, data.to_place_id)
-    from_place = await _place(session, data.from_place_id)
+    to_place = await load_place(session, data.to_place_id)
+    from_place = await load_place(session, data.from_place_id)
     # The host enters local date and time at the pickup; store the instant (ADR 0006).
     departs_at = datetime.combine(
         data.depart_date, data.window_start, ZoneInfo(from_place.timezone)
@@ -121,6 +121,10 @@ def filtered(stmt: Select[Trip], f: TripFilters) -> Select[Trip]:
     stmt = stmt.where(
         Trip.status.in_((TripStatus.open, TripStatus.full)), Trip.departs_at > func.now()
     )
+    if f.departs_after is not None:
+        stmt = stmt.where(Trip.departs_at >= f.departs_after)
+    if f.departs_before is not None:
+        stmt = stmt.where(Trip.departs_at <= f.departs_before)
     if f.on_date is not None:
         stmt = stmt.where(func.date(func.timezone(Trip.timezone, Trip.departs_at)) == f.on_date)
     stmt = _place_filter(

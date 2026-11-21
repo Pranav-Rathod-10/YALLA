@@ -1,5 +1,5 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 from typing import Annotated
 
 from fastapi import HTTPException, Query
@@ -20,6 +20,8 @@ class TripFilters(BaseModel):
     radius_km: float = 3.0
     time_min: int | None = None
     on_date: date | None = None
+    departs_after: datetime | None = None
+    departs_before: datetime | None = None
 
 
 def _latlng(raw: str | None, name: str) -> LatLng | None:
