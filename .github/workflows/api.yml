@@ -38,6 +38,13 @@ jobs:
       - run: uv run ruff check --config ../../ruff.toml .
       - run: uv run black --check --config ../../pyproject.toml .
       - run: uv run mypy app
+      - name: Migrations apply cleanly and match the models
+        env:
+          YALLA_DATABASE_URL: postgresql+asyncpg://yalla:yalla@localhost:5433/yalla_test
+        run: |
+          uv run alembic upgrade head
+          uv run alembic check
+          uv run alembic downgrade base
       - run: uv run pytest -q
 
   docker:

@@ -3,3 +3,4 @@
 line-length = 100
 target-version = ["py312"]
 extend-exclude = "alembic/versions"
+force-exclude = "alembic/versions"

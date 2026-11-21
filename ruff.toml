@@ -1,6 +1,8 @@
 # Shared ruff config. Formatting is owned by black; ruff only lints.
 target-version = "py312"
 line-length = 100
+# pre-commit passes file names explicitly; still honour the excludes below.
+force-exclude = true
 extend-exclude = ["**/alembic/versions/*"]
 
 [lint]
@@ -23,3 +25,4 @@ ignore = ["E501"]  # black handles line length
 
 [lint.isort]
 known-first-party = ["app"]
+known-third-party = ["alembic"]
