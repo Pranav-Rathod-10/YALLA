@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 from typing import Annotated
 
 from fastapi import HTTPException, Query
@@ -18,6 +19,7 @@ class TripFilters(BaseModel):
     to_text: str | None = None
     radius_km: float = 3.0
     time_min: int | None = None
+    on_date: date | None = None
 
 
 def _latlng(raw: str | None, name: str) -> LatLng | None:
@@ -46,6 +48,9 @@ def trip_filters(
     time_min: Annotated[
         int | None, Query(ge=0, lt=1440, description="Minutes since midnight; +-60 min")
     ] = None,
+    on_date: Annotated[
+        date | None, Query(alias="date", description="Local departure date at the pickup")
+    ] = None,
 ) -> TripFilters:
     return TripFilters(
         from_place_id=from_place_id,
@@ -56,4 +61,5 @@ def trip_filters(
         to_text=to,
         radius_km=radius_km,
         time_min=time_min,
+        on_date=on_date,
     )

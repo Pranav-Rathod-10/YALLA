@@ -39,7 +39,7 @@ The live, exact contract is the OpenAPI document at `GET /openapi.json` (Swagger
 | `from`, `to` | Free-text fallback, case-insensitive substring on place name |
 | `radius_km` | Default 3 |
 | `date` | Local date `YYYY-MM-DD` |
-| `time` | Local time `HH:MM`; returns trips departing within 60 minutes of it (across midnight) |
+| `time_min` | Local minutes since midnight; trips departing within 60 minutes of it (across midnight) |
 | `cursor`, `limit` | Keyset pagination, default limit 20 |
 
 Past trips and cancelled trips are never returned.

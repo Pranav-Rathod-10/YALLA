@@ -9,7 +9,7 @@ from sqlalchemy.orm import aliased
 
 from app.core.errors import DomainError, NotFoundError
 from app.models import Place, SavedTrip, Trip, TripMember, User
-from app.models.enums import MemberRole
+from app.models.enums import MemberRole, TripStatus
 from app.schemas.common import UserSummary
 from app.schemas.place import PlaceOut
 from app.schemas.trip import TripCreate, TripDetail, TripOut
@@ -115,6 +115,12 @@ def _place_filter(
 
 
 def filtered(stmt: Select[Trip], f: TripFilters) -> Select[Trip]:
+    # Only trips people can still join: not cancelled or completed, not already left (YAL-B05).
+    stmt = stmt.where(
+        Trip.status.in_((TripStatus.open, TripStatus.full)), Trip.departs_at > func.now()
+    )
+    if f.on_date is not None:
+        stmt = stmt.where(func.date(func.timezone(Trip.timezone, Trip.departs_at)) == f.on_date)
     stmt = _place_filter(
         stmt,
         Trip.from_place_id,
