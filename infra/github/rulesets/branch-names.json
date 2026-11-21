@@ -1,0 +1,19 @@
+{
+  "name": "branch-naming",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": { "include": ["~ALL"], "exclude": ["refs/heads/main", "refs/heads/dev"] }
+  },
+  "rules": [
+    {
+      "type": "branch_name_pattern",
+      "parameters": {
+        "name": "type/date_dev_slug",
+        "operator": "regex",
+        "pattern": "^(feat|fix|docs|chore|refactor|test|ci|perf|build|revert)/[0-9]{4}-[0-9]{2}-[0-9]{2}_dev_[a-z0-9-]+$",
+        "negate": false
+      }
+    }
+  ]
+}
