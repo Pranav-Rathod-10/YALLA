@@ -23,8 +23,9 @@ Read `docs/architecture/application.md` and `docs/architecture/dataflow.md` firs
 
 ## Commands
 ```bash
-make dev        # docker compose up: api, worker, postgres, redis
-make test       # backend tests
+make dev        # docker compose up: db, redis, migrate, api, worker
+make seed       # multi-city demo data
+make test       # backend tests (needs a PostGIS database, see docs/runbook.md)
 make lint       # pre-commit on all files
-pnpm gen:api    # regenerate packages/api-client from the running API
+pnpm gen:api    # regenerate packages/api-client after any route/schema change
 ```
