@@ -1,5 +1,5 @@
 import uuid
-from datetime import date, time
+from datetime import date, datetime, time
 from typing import Annotated, Literal
 
 from pydantic import Field
@@ -12,8 +12,8 @@ from app.schemas.place import PlaceOut
 class TripCreate(Schema):
     from_place_id: uuid.UUID
     to_place_id: uuid.UUID
-    depart_date: date
-    window_start: time
+    depart_date: date = Field(description="Local date at the pickup place")
+    window_start: time = Field(description="Local start of the departure window")
     window_minutes: Literal[15, 30] = 30
     passenger_seats: Annotated[
         int, Field(ge=1, le=3, description="Passenger seats, host not counted.")
@@ -34,8 +34,9 @@ class TripOut(Schema):
     from_place: PlaceOut
     to_place: PlaceOut
     pickup: str
-    depart_date: date
-    window_start: time
+    departs_at: datetime = Field(description="Window start, ISO 8601 in the trip's timezone")
+    window_ends_at: datetime
+    timezone: str
     window_minutes: int
     passenger_seats: int
     seats_taken: int
