@@ -1,11 +1,11 @@
 import asyncio
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 import app.models  # noqa: F401  (register tables)
-from alembic import context
 from app.core.config import get_settings
 from app.db.base import Base
 
@@ -14,13 +14,19 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-POSTGIS_TABLES = {"spatial_ref_sys"}
 
 
 def include_object(
     obj: object, name: str | None, type_: str, reflected: bool, compare_to: object
 ) -> bool:
-    return not (type_ == "table" and name in POSTGIS_TABLES)
+    """Only compare objects we own. The PostGIS image ships extra extensions (tiger geocoder,
+    topology) whose tables must not show up as 'removed' in autogenerate or `alembic check`."""
+    if type_ == "table":
+        return not reflected or name in target_metadata.tables
+    if type_ == "index" and reflected and compare_to is None:
+        table = getattr(obj, "table", None)
+        return table is not None and table.name in target_metadata.tables
+    return True
 
 
 def run_migrations_offline() -> None:
