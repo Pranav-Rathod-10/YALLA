@@ -14,10 +14,10 @@ router = APIRouter(prefix="/trips", tags=["trips"])
 @router.get("")
 async def list_trips(
     session: SessionDep,
-    _: CurrentUser,
+    user: CurrentUser,
     filters: Annotated[TripFilters, Depends(trip_filters)],
 ) -> list[TripOut]:
-    return await trips.list_trips(session, filters)
+    return await trips.list_trips(session, filters, user)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
@@ -26,8 +26,8 @@ async def create_trip(body: TripCreate, user: CurrentUser, session: SessionDep) 
 
 
 @router.get("/{trip_id}")
-async def get_trip(trip_id: uuid.UUID, session: SessionDep, _: CurrentUser) -> TripDetail:
-    return await trips.get_trip(session, trip_id)
+async def get_trip(trip_id: uuid.UUID, session: SessionDep, user: CurrentUser) -> TripDetail:
+    return await trips.get_trip(session, trip_id, user)
 
 
 @router.put("/{trip_id}/save", status_code=status.HTTP_204_NO_CONTENT)
