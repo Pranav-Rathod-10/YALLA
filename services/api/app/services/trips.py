@@ -15,6 +15,8 @@ from app.schemas.trip import TripCreate, TripDetail, TripOut
 from app.services.places import place_columns
 
 CURRENT_LOCATION = "current location"
+MINUTES_PER_DAY = 24 * 60
+TIME_WINDOW_MIN = 60
 
 
 class PastDateError(DomainError):
@@ -95,7 +97,9 @@ def filtered(
             from_p.name.icontains(from_.strip())
         )
     if time_min is not None:
-        stmt = stmt.where(func.abs(_start_min() - time_min) <= 60)
+        # Distance on a 24 h clock: 23:30 and 00:00 are 30 minutes apart, not 1410 (YAL-B01).
+        diff = func.abs(_start_min() - time_min)
+        stmt = stmt.where(func.least(diff, MINUTES_PER_DAY - diff) <= TIME_WINDOW_MIN)
     return stmt
 
 

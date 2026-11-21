@@ -21,7 +21,7 @@ YAL-030,feat,Generated TypeScript API client,planned,Akash,2026-11-21,ADR-0004,N
 YAL-031,feat,Thin web client,planned,Akash,2026-11-21,discussion,Show the backend working in a browser,Pranav,,,,,,Pranav owns frontends
 YAL-032,feat,Mobile app skeleton (Expo),planned,Pranav,2026-11-21,spec §3,Base for Pranav's frontend work,Pranav,,,,,,
 YAL-033,ci,Android APK build profile,planned,Akash,2026-11-21,discussion,Installable build to share,Pranav,,,,,,Needs eas login
-YAL-B01,bug,Departure-time filter misses trips across midnight,planned,Akash,2026-11-21,spec §7.3,abs(a-b)<=60 fails for 11:30 PM vs 12:00 AM; concert return rides hit this,Akash,,,,,,
+YAL-B01,bug,Departure-time filter misses trips across midnight,in_review,Akash,2026-11-21,spec §7.3,abs(a-b)<=60 fails for 11:30 PM vs 12:00 AM; concert return rides hit this,Akash,fix/2026-11-21_dev_time-filter-midnight,,,,,
 YAL-B02,bug,Place matching by substring,planned,Akash,2026-11-21,spec §7.3 §8.1 / ADR-0003,Panjim vs Panaji; Current location ignored,Akash,,,,,,
 YAL-B03,bug,Seat count defined three different ways,planned,Akash,2026-11-21,spec §7.5 §11 §12,total includes host; seatsTotal does not; seats+1,Akash,,,,,,
 YAL-B04,bug,Dates times and costs stored as display strings,planned,Akash,2026-11-21,spec §11 / ADR-0006,Cannot sort filter or localise,Akash,,,,,,
