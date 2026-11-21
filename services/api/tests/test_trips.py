@@ -117,3 +117,20 @@ async def test_save_and_unsave(client: AsyncClient, session: AsyncSession, login
 async def test_unknown_trip_is_404(client: AsyncClient, login: Login) -> None:
     r = await client.get("/v1/trips/00000000-0000-0000-0000-000000000000", headers=await login())
     assert r.status_code == 404
+
+
+async def test_time_filter_wraps_past_midnight(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    """YAL-B01: an 11:30 PM filter must find a 12:00 AM concert ride back."""
+    places = await add_places(session)
+    headers = await login()
+    await client.post(
+        "/v1/trips",
+        json=trip_body(places, "Vagator", "Panjim", window_start="00:00"),
+        headers=headers,
+    )
+    r = await client.get("/v1/trips", params={"time_min": 23 * 60 + 30}, headers=headers)
+    assert [t["title"] for t in r.json()] == ["Trip to Panjim"]
+    r = await client.get("/v1/trips", params={"time_min": 22 * 60 + 30}, headers=headers)
+    assert r.json() == []
