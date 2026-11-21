@@ -6,6 +6,7 @@ Versions follow [SemVer](https://semver.org).
 ## [Unreleased]
 
 ### Added
+- Runbook (`docs/runbook.md`) covering local setup, tests, configuration and open work.
 - Repo scaffold: gitignore, editorconfig, PR and issue templates, CODEOWNERS (YAL-003).
 - Pre-commit with ruff, black, prettier, gitleaks and a Conventional Commits check (YAL-004).
 - GitHub rulesets and repo settings as code (YAL-005).
