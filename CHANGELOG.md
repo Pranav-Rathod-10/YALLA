@@ -20,6 +20,7 @@ Versions follow [SemVer](https://semver.org).
 - @yalla/api-client generated from OpenAPI with pnpm gen:api; CI fails on drift (YAL-030, ADR 0004).
 - Thin web client (Vite + React): login, trips with filters, details and request, post a trip, requests, alerts (YAL-031).
 - Expo SDK 58 mobile skeleton: Expo Router tabs, OTP login, trips, trip details and request, requests, events (YAL-032).
+- EAS build profiles (preview APK, production AAB) and mobile CI; manual APK workflow (YAL-033).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).
