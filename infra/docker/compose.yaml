@@ -22,15 +22,33 @@ services:
       interval: 5s
       retries: 10
 
+  migrate:
+    build: ../../services/api
+    env_file: ../../services/api/.env.example
+    environment: &api-env
+      YALLA_DATABASE_URL: postgresql+asyncpg://yalla:yalla@db:5432/yalla
+      YALLA_REDIS_URL: redis://redis:6379/0
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db: { condition: service_healthy }
+
   api:
     build: ../../services/api
     env_file: ../../services/api/.env.example
-    environment:
-      YALLA_DATABASE_URL: postgresql+asyncpg://yalla:yalla@db:5432/yalla
-      YALLA_REDIS_URL: redis://redis:6379/0
+    environment: *api-env
     ports: ["8000:8000"]
     depends_on:
-      db: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+
+  worker:
+    build: ../../services/api
+    env_file: ../../services/api/.env.example
+    environment: *api-env
+    command: ["arq", "app.workers.main.WorkerSettings"]
+    healthcheck: { disable: true }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
       redis: { condition: service_healthy }
 
 volumes:
