@@ -36,6 +36,7 @@ uv run arq app.workers.main.WorkerSettings   # outbox worker, second terminal
 ## Tests
 
 ```bash
+docker compose -f infra/docker/compose.yaml exec db createdb -U yalla yalla_test   # once
 cd services/api
 YALLA_DATABASE_URL=postgresql+asyncpg://yalla:yalla@localhost:5432/yalla_test uv run pytest
 ```
