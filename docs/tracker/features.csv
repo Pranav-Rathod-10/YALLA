@@ -25,5 +25,5 @@ YAL-B01,bug,Departure-time filter misses trips across midnight,in_review,Akash,2
 YAL-B02,bug,Place matching by substring,in_review,Akash,2026-11-21,spec §7.3 §8.1 / ADR-0003,Panjim vs Panaji; Current location ignored,Akash,fix/2026-11-21_dev_geo-place-matching,,,,,
 YAL-B03,bug,Seat count defined three different ways,in_review,Akash,2026-11-21,spec §7.5 §11 §12,total includes host; seatsTotal does not; seats+1,Akash,refactor/2026-11-21_dev_seat-model,,,,,
 YAL-B04,bug,Dates times and costs stored as display strings,in_review,Akash,2026-11-21,spec §11 / ADR-0006,Cannot sort filter or localise,Akash,refactor/2026-11-21_dev_departure-instant,,,,,
-YAL-B05,bug,Past trips never hidden and date strip does not filter,planned,Akash,2026-11-21,spec §7.3,Users would see trips that already left,Akash,,,,,,
+YAL-B05,bug,Past trips never hidden and date strip does not filter,in_review,Akash,2026-11-21,spec §7.3,Users would see trips that already left,Akash,fix/2026-11-21_dev_hide-past-date-filter,,,,,
 YAL-B06,bug,Request sent cancels with no confirmation,planned,Akash,2026-11-21,spec §7.4,Easy accidental cancel; client-side fix,Pranav,,,,,,Frontend
