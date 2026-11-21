@@ -15,7 +15,9 @@ class TripCreate(Schema):
     depart_date: date
     window_start: time
     window_minutes: Literal[15, 30] = 30
-    seats: Annotated[int, Field(ge=1, le=3, description="Passenger seats, host not counted.")] = 2
+    passenger_seats: Annotated[
+        int, Field(ge=1, le=3, description="Passenger seats, host not counted.")
+    ] = 2
     joining: Joining = Joining.approval
     females_only: bool = False
     cost_shared: bool = True
@@ -35,8 +37,8 @@ class TripOut(Schema):
     depart_date: date
     window_start: time
     window_minutes: int
-    seats_total: int
-    going: int
+    passenger_seats: int
+    seats_taken: int
     seats_left: int
     vehicle: str
     cost_per_person: int | None
