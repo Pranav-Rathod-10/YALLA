@@ -1,0 +1,24 @@
+name: client
+
+on:
+  pull_request:
+    paths: ["services/api/app/**", "packages/**", "scripts/gen-api.sh", ".github/workflows/client.yml"]
+
+jobs:
+  contract:
+    name: client / contract-up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cd services/api && uv sync --frozen
+      - run: pnpm gen:api
+      - name: Generated client matches the API
+        run: git diff --exit-code -- packages/api-client || (echo "Run 'pnpm gen:api' and commit." && exit 1)
+      - run: pnpm --filter @yalla/api-client typecheck
