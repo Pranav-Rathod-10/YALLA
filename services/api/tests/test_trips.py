@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from httpx import AsyncClient
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Place
@@ -178,3 +179,34 @@ async def test_departure_is_stored_in_the_pickup_timezone(
     # The time filter works on local clock time at the pickup.
     r = await client.get("/v1/trips", params={"time_min": 18 * 60}, headers=headers)
     assert [t["title"] for t in r.json()] == ["Trip to Panjim"]
+
+
+async def test_past_trips_are_hidden_and_date_filters(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    """YAL-B05: trips that already left never show; `date` filters by local day."""
+    places = await add_places(session)
+    headers = await login()
+    in_two_days = (date.today() + timedelta(days=2)).isoformat()
+    await client.post("/v1/trips", json=trip_body(places, "Panjim", "Vagator"), headers=headers)
+    await client.post(
+        "/v1/trips",
+        json=trip_body(places, "Panjim", "Anjuna", depart_date=in_two_days),
+        headers=headers,
+    )
+    # A trip that left an hour ago (inserted directly; the API refuses past dates).
+    await session.execute(
+        text(
+            "UPDATE trips SET departs_at = now() - interval '1 hour' "
+            "WHERE title = 'Trip to Anjuna'"
+        )
+    )
+    await session.commit()
+
+    async def titles(**params: object) -> list[str]:
+        r = await client.get("/v1/trips", params=params, headers=headers)
+        return [t["title"] for t in r.json()]
+
+    assert await titles() == ["Trip to Vagator"]
+    assert await titles(date=TOMORROW) == ["Trip to Vagator"]
+    assert await titles(date=in_two_days) == []
