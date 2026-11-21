@@ -38,3 +38,14 @@ async def test_returns_coordinates(
 async def test_empty_query_returns_nothing(client: AsyncClient, login: Login) -> None:
     r = await client.get("/v1/places/search", params={"q": "  "}, headers=await login())
     assert r.json() == []
+
+
+async def test_near_ranks_closer_places_first(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    await add_places(session)
+    # Standing in Margao (south): Margao beats Vagator (north) among "ga" matches.
+    r = await client.get(
+        "/v1/places/search", params={"q": "ga", "near": "15.28,73.98"}, headers=await login()
+    )
+    assert r.json()[0]["name"] == "Margao"
