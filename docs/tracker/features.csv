@@ -1,0 +1,29 @@
+id,type,title,status,proposed_by,proposed_on,source,rationale,owner,branch,pr,reviewer,review_outcome,merged_on,notes
+YAL-001,decision,Rename to Yalla and support any city,accepted,Akash,2026-11-21,discussion,Product is not Goa-only; name must not reference Goa,Akash,docs/2026-11-21_dev_import-spec-rename-yalla,,,,,
+YAL-002,decision,Monorepo: web + mobile + one backend,accepted,Akash,2026-11-21,ADR-0001,Same shape as a previous project that worked; shared generated client,Akash,docs/2026-11-21_dev_data-model-api-adrs,,,,,
+YAL-003,chore,Repo scaffold and templates,in_review,Akash,2026-11-20,discussion,Production hygiene from day one,Akash,chore/2026-11-20_dev_repo-scaffold,,,,,
+YAL-004,chore,Pre-commit with ruff black prettier gitleaks and commit-msg check,in_review,Akash,2026-11-20,discussion,Catch style and secrets before they reach a PR,Akash,chore/2026-11-20_dev_lint-format-precommit,,,,,
+YAL-005,chore,Branch rulesets and repo settings as code,in_review,Akash,2026-11-20,discussion,Protect main/dev; merge commits keep stacked PRs conflict-free,Akash,chore/2026-11-20_dev_github-rulesets,,,,,Needs admin to apply
+YAL-006,docs,Architecture data flow data model API docs and ADRs,in_review,Akash,2026-11-21,discussion,Shared understanding before code,Akash,docs/2026-11-21_dev_architecture-dataflow,,,,,
+YAL-010,feat,API skeleton: config logging health errors,planned,Akash,2026-11-21,ADR-0002,Base for every backend feature,Akash,,,,,,
+YAL-011,chore,Dockerfiles and docker-compose,planned,Akash,2026-11-21,discussion,One command local stack,Akash,,,,,,
+YAL-012,ci,GitHub Actions for API and pre-commit,planned,Akash,2026-11-21,discussion,Every PR is linted typed and tested,Akash,,,,,,
+YAL-013,feat,Database schema and migrations,planned,Akash,2026-11-21,spec §12,Durable trips requests events alerts,Akash,,,,,,
+YAL-014,feat,Phone OTP login with JWT,planned,Akash,2026-11-21,spec §13.1,Login not designed in spec; minimal flow needed for any per-user feature,Akash,,,,,,Dev stub echoes code
+YAL-020,feat,Place search,planned,Pranav,2026-11-21,spec §8.1,Location sheet autocomplete,Akash,,,,,,
+YAL-021,feat,Post list and view trips with filters,planned,Pranav,2026-11-21,spec §7.3 §7.4 §7.5,Core of the product,Akash,,,,,,
+YAL-022,feat,Request to join accept decline cancel,planned,Pranav,2026-11-21,spec §7.4 §7.6 §8.4,Core of the product,Akash,,,,,,
+YAL-023,feat,Females-only enforced on the server,planned,Akash,2026-11-21,spec §13.14 / ADR-0007,A label alone lets anyone request,Akash,,,,,,Owner decision pending
+YAL-024,feat,Events and Home to Event ride search,planned,Pranav,2026-11-21,spec §7.7,Social tab,Akash,,,,,,
+YAL-025,feat,Alerts with transactional outbox,planned,Pranav,2026-11-21,spec §7.8 / ADR-0005,Alerts tab and future push,Akash,,,,,,
+YAL-026,chore,Multi-city seed data,planned,Akash,2026-11-21,YAL-001,Demo data beyond Goa,Akash,,,,,,
+YAL-030,feat,Generated TypeScript API client,planned,Akash,2026-11-21,ADR-0004,No type drift between Python and TS,Akash,,,,,,
+YAL-031,feat,Thin web client,planned,Akash,2026-11-21,discussion,Show the backend working in a browser,Pranav,,,,,,Pranav owns frontends
+YAL-032,feat,Mobile app skeleton (Expo),planned,Pranav,2026-11-21,spec §3,Base for Pranav's frontend work,Pranav,,,,,,
+YAL-033,ci,Android APK build profile,planned,Akash,2026-11-21,discussion,Installable build to share,Pranav,,,,,,Needs eas login
+YAL-B01,bug,Departure-time filter misses trips across midnight,planned,Akash,2026-11-21,spec §7.3,abs(a-b)<=60 fails for 11:30 PM vs 12:00 AM; concert return rides hit this,Akash,,,,,,
+YAL-B02,bug,Place matching by substring,planned,Akash,2026-11-21,spec §7.3 §8.1 / ADR-0003,Panjim vs Panaji; Current location ignored,Akash,,,,,,
+YAL-B03,bug,Seat count defined three different ways,planned,Akash,2026-11-21,spec §7.5 §11 §12,total includes host; seatsTotal does not; seats+1,Akash,,,,,,
+YAL-B04,bug,Dates times and costs stored as display strings,planned,Akash,2026-11-21,spec §11 / ADR-0006,Cannot sort filter or localise,Akash,,,,,,
+YAL-B05,bug,Past trips never hidden and date strip does not filter,planned,Akash,2026-11-21,spec §7.3,Users would see trips that already left,Akash,,,,,,
+YAL-B06,bug,Request sent cancels with no confirmation,planned,Akash,2026-11-21,spec §7.4,Easy accidental cancel; client-side fix,Pranav,,,,,,Frontend
