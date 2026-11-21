@@ -28,4 +28,4 @@ class RefreshIn(Schema):
 class Tokens(Schema):
     access_token: str
     refresh_token: str | None = None
-    token_type: str = "bearer"  # noqa: S105  (OAuth2 token type, not a secret)
+    token_type: str = "bearer"

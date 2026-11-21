@@ -25,6 +25,9 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
-    if settings.env == "prod" and settings.jwt_secret.get_secret_value() == "dev-only-change-me-not-for-production":
+    if (
+        settings.env == "prod"
+        and settings.jwt_secret.get_secret_value() == "dev-only-change-me-not-for-production"
+    ):
         raise RuntimeError("YALLA_JWT_SECRET must be set in production.")
     return settings
