@@ -1,0 +1,153 @@
+/* Tokens from docs/spec/frontend-spec.md section 4. */
+:root {
+  --brand: #2f9e5e;
+  --brand-ink: #ffffff;
+  --brand-tint: #d7efe0;
+  --brand-deep: #1f6b3f;
+  --text: #141816;
+  --text-muted: #5b625e;
+  --line: #e3e7e3;
+  --surface-gray: #f1f2f1;
+  --surface: #ffffff;
+  --time-pill: #2f6df6;
+  --warn-fill: #f6a93b;
+  --warn-ink: #3b2500;
+  --female-bg: #fde7f1;
+  --female-ink: #a3185f;
+  --danger: #b3261e;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-head: 'Space Grotesk', 'Inter', sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--surface-gray);
+  color: var(--text);
+  font: 14px/1.5 var(--font-ui);
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-head);
+  margin: 0 0 8px;
+}
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 18px 96px;
+}
+.card {
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 12px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.pill {
+  background: var(--time-pill);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.chip {
+  background: var(--surface-gray);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+.chip.female {
+  background: var(--female-bg);
+  color: var(--female-ink);
+}
+.chip.warn {
+  background: var(--warn-fill);
+  color: var(--warn-ink);
+}
+.muted {
+  color: var(--text-muted);
+}
+.error {
+  color: var(--danger);
+}
+button {
+  font: 600 14px var(--font-ui);
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: var(--brand);
+  color: var(--brand-ink);
+  min-height: 44px;
+}
+button.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  width: 100%;
+}
+label {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+nav.tabs {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 22px;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+nav.tabs button {
+  background: none;
+  color: var(--text-muted);
+  border-radius: 999px;
+}
+nav.tabs button[aria-current='page'] {
+  background: var(--brand-tint);
+  color: var(--brand-deep);
+}
+.suggestions {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+.suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.suggestions li:hover {
+  background: var(--surface-gray);
+}
