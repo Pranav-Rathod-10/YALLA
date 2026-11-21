@@ -12,7 +12,7 @@ YAL-013,feat,Database schema and migrations,planned,Akash,2026-11-21,spec §12,D
 YAL-014,feat,Phone OTP login with JWT,planned,Akash,2026-11-21,spec §13.1,Login not designed in spec; minimal flow needed for any per-user feature,Akash,,,,,,Dev stub echoes code
 YAL-020,feat,Place search,planned,Pranav,2026-11-21,spec §8.1,Location sheet autocomplete,Akash,,,,,,
 YAL-021,feat,Post list and view trips with filters,planned,Pranav,2026-11-21,spec §7.3 §7.4 §7.5,Core of the product,Akash,,,,,,
-YAL-022,feat,Request to join accept decline cancel,planned,Pranav,2026-11-21,spec §7.4 §7.6 §8.4,Core of the product,Akash,,,,,,
+YAL-022,feat,Request to join accept decline cancel,in_review,Pranav,2026-11-21,spec §7.4 §7.6 §8.4,Core of the product,Akash,feat/2026-11-21_dev_join-requests,,,,,
 YAL-023,feat,Females-only enforced on the server,planned,Akash,2026-11-21,spec §13.14 / ADR-0007,A label alone lets anyone request,Akash,,,,,,Owner decision pending
 YAL-024,feat,Events and Home to Event ride search,planned,Pranav,2026-11-21,spec §7.7,Social tab,Akash,,,,,,
 YAL-025,feat,Alerts with transactional outbox,planned,Pranav,2026-11-21,spec §7.8 / ADR-0005,Alerts tab and future push,Akash,,,,,,

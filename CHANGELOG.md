@@ -12,6 +12,7 @@ Versions follow [SemVer](https://semver.org).
 - Spec imported; app renamed from Bla Bla Goa to Yalla and widened to any city (YAL-001).
 - Architecture, data flow, data model and API docs; ADRs 0001-0007 (YAL-006).
 - Feature tracker CSV, proposal template, contributing guide.
+- Join requests: send (optional 1024-char message), accept, decline, cancel, Sent/Received lists; instant join; row-locked seats (YAL-022).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).
