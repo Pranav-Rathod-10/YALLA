@@ -20,7 +20,7 @@ YAL-026,chore,Multi-city seed data,in_review,Akash,2026-11-21,YAL-001,Demo data 
 YAL-030,feat,Generated TypeScript API client,in_review,Akash,2026-11-21,ADR-0004,No type drift between Python and TS,Akash,feat/2026-11-21_dev_api-client,,,,,
 YAL-031,feat,Thin web client,in_review,Akash,2026-11-21,discussion,Show the backend working in a browser,Pranav,feat/2026-11-21_dev_web-client,,,,,Pranav owns frontends
 YAL-032,feat,Mobile app skeleton (Expo),in_review,Pranav,2026-11-21,spec §3,Base for Pranav's frontend work,Pranav,feat/2026-11-21_dev_mobile-skeleton,,,,,
-YAL-033,ci,Android APK build profile,planned,Akash,2026-11-21,discussion,Installable build to share,Pranav,,,,,,Needs eas login
+YAL-033,ci,Android APK build profile,in_review,Akash,2026-11-21,discussion,Installable build to share,Pranav,ci/2026-11-21_dev_apk-build,,,,,Needs eas login
 YAL-B01,bug,Departure-time filter misses trips across midnight,in_review,Akash,2026-11-21,spec §7.3,abs(a-b)<=60 fails for 11:30 PM vs 12:00 AM; concert return rides hit this,Akash,fix/2026-11-21_dev_time-filter-midnight,,,,,
 YAL-B02,bug,Place matching by substring,in_review,Akash,2026-11-21,spec §7.3 §8.1 / ADR-0003,Panjim vs Panaji; Current location ignored,Akash,fix/2026-11-21_dev_geo-place-matching,,,,,
 YAL-B03,bug,Seat count defined three different ways,in_review,Akash,2026-11-21,spec §7.5 §11 §12,total includes host; seatsTotal does not; seats+1,Akash,refactor/2026-11-21_dev_seat-model,,,,,
