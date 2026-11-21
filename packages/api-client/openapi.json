@@ -1,0 +1,2020 @@
+{
+  "components": {
+    "schemas": {
+      "AlertKind": {
+        "enum": [
+          "request",
+          "accepted",
+          "declined",
+          "query",
+          "new_trip"
+        ],
+        "title": "AlertKind",
+        "type": "string"
+      },
+      "AlertOut": {
+        "properties": {
+          "actor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/AlertKind"
+          },
+          "read_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Read At"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          },
+          "trip_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trip Id"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "actor",
+          "trip_id",
+          "created_at",
+          "read_at"
+        ],
+        "title": "AlertOut",
+        "type": "object"
+      },
+      "EventOut": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "venue": {
+            "$ref": "#/components/schemas/PlaceOut"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "venue",
+          "starts_at",
+          "image_url"
+        ],
+        "title": "EventOut",
+        "type": "object"
+      },
+      "Gender": {
+        "enum": [
+          "female",
+          "male",
+          "other",
+          "undisclosed"
+        ],
+        "title": "Gender",
+        "type": "string"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Joining": {
+        "enum": [
+          "approval",
+          "instant"
+        ],
+        "title": "Joining",
+        "type": "string"
+      },
+      "Me": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "gender_verified": {
+            "title": "Gender Verified",
+            "type": "boolean"
+          },
+          "home_place_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Place Id"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "phone",
+          "name",
+          "gender",
+          "gender_verified",
+          "home_place_id",
+          "created_at"
+        ],
+        "title": "Me",
+        "type": "object"
+      },
+      "MeUpdate": {
+        "properties": {
+          "gender": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "home_place_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Place Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "title": "MeUpdate",
+        "type": "object"
+      },
+      "OtpRequest": {
+        "properties": {
+          "phone": {
+            "examples": [
+              "+919800000001"
+            ],
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "phone"
+        ],
+        "title": "OtpRequest",
+        "type": "object"
+      },
+      "OtpRequested": {
+        "properties": {
+          "dev_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only returned outside production.",
+            "title": "Dev Code"
+          },
+          "sent": {
+            "default": true,
+            "title": "Sent",
+            "type": "boolean"
+          }
+        },
+        "title": "OtpRequested",
+        "type": "object"
+      },
+      "OtpVerify": {
+        "properties": {
+          "code": {
+            "pattern": "^\\d{6}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "phone": {
+            "examples": [
+              "+919800000001"
+            ],
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "phone",
+          "code"
+        ],
+        "title": "OtpVerify",
+        "type": "object"
+      },
+      "PlaceOut": {
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "city": {
+            "title": "City",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "lat": {
+            "title": "Lat",
+            "type": "number"
+          },
+          "lng": {
+            "title": "Lng",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "address",
+          "city",
+          "timezone",
+          "lat",
+          "lng"
+        ],
+        "title": "PlaceOut",
+        "type": "object"
+      },
+      "RefreshIn": {
+        "properties": {
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshIn",
+        "type": "object"
+      },
+      "RequestCreate": {
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "maxLength": 1024,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "RequestCreate",
+        "type": "object"
+      },
+      "RequestDecision": {
+        "properties": {
+          "status": {
+            "enum": [
+              "accepted",
+              "declined"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "RequestDecision",
+        "type": "object"
+      },
+      "RequestStatus": {
+        "enum": [
+          "pending",
+          "accepted",
+          "declined",
+          "cancelled"
+        ],
+        "title": "RequestStatus",
+        "type": "string"
+      },
+      "Tokens": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "refresh_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "title": "Tokens",
+        "type": "object"
+      },
+      "TripCreate": {
+        "properties": {
+          "cost_per_person": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Per Person"
+          },
+          "cost_shared": {
+            "default": true,
+            "title": "Cost Shared",
+            "type": "boolean"
+          },
+          "depart_date": {
+            "description": "Local date at the pickup place",
+            "format": "date",
+            "title": "Depart Date",
+            "type": "string"
+          },
+          "females_only": {
+            "default": false,
+            "title": "Females Only",
+            "type": "boolean"
+          },
+          "from_place_id": {
+            "format": "uuid",
+            "title": "From Place Id",
+            "type": "string"
+          },
+          "joining": {
+            "$ref": "#/components/schemas/Joining",
+            "default": "approval"
+          },
+          "passenger_seats": {
+            "default": 2,
+            "description": "Passenger seats, host not counted.",
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Passenger Seats",
+            "type": "integer"
+          },
+          "pickup": {
+            "anyOf": [
+              {
+                "maxLength": 255,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pickup"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "to_place_id": {
+            "format": "uuid",
+            "title": "To Place Id",
+            "type": "string"
+          },
+          "vehicle": {
+            "default": "Cab",
+            "maxLength": 40,
+            "title": "Vehicle",
+            "type": "string"
+          },
+          "window_minutes": {
+            "default": 30,
+            "enum": [
+              15,
+              30
+            ],
+            "title": "Window Minutes",
+            "type": "integer"
+          },
+          "window_start": {
+            "description": "Local start of the departure window",
+            "format": "time",
+            "title": "Window Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from_place_id",
+          "to_place_id",
+          "depart_date",
+          "window_start"
+        ],
+        "title": "TripCreate",
+        "type": "object"
+      },
+      "TripDetail": {
+        "properties": {
+          "can_request": {
+            "description": "Whether the viewer may request this trip",
+            "title": "Can Request",
+            "type": "boolean"
+          },
+          "cost_per_person": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Per Person"
+          },
+          "cost_shared": {
+            "title": "Cost Shared",
+            "type": "boolean"
+          },
+          "departs_at": {
+            "description": "Window start, ISO 8601 in the trip's timezone",
+            "format": "date-time",
+            "title": "Departs At",
+            "type": "string"
+          },
+          "females_only": {
+            "title": "Females Only",
+            "type": "boolean"
+          },
+          "from_place": {
+            "$ref": "#/components/schemas/PlaceOut"
+          },
+          "host": {
+            "$ref": "#/components/schemas/UserSummary"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "joining": {
+            "$ref": "#/components/schemas/Joining"
+          },
+          "passenger_seats": {
+            "title": "Passenger Seats",
+            "type": "integer"
+          },
+          "pickup": {
+            "title": "Pickup",
+            "type": "string"
+          },
+          "seats_left": {
+            "title": "Seats Left",
+            "type": "integer"
+          },
+          "seats_taken": {
+            "title": "Seats Taken",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TripStatus"
+          },
+          "tag": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "to_place": {
+            "$ref": "#/components/schemas/PlaceOut"
+          },
+          "travellers": {
+            "items": {
+              "$ref": "#/components/schemas/UserSummary"
+            },
+            "title": "Travellers",
+            "type": "array"
+          },
+          "vehicle": {
+            "title": "Vehicle",
+            "type": "string"
+          },
+          "window_ends_at": {
+            "format": "date-time",
+            "title": "Window Ends At",
+            "type": "string"
+          },
+          "window_minutes": {
+            "title": "Window Minutes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "tag",
+          "from_place",
+          "to_place",
+          "pickup",
+          "departs_at",
+          "window_ends_at",
+          "timezone",
+          "window_minutes",
+          "passenger_seats",
+          "seats_taken",
+          "seats_left",
+          "vehicle",
+          "cost_per_person",
+          "cost_shared",
+          "joining",
+          "females_only",
+          "status",
+          "host",
+          "can_request",
+          "travellers"
+        ],
+        "title": "TripDetail",
+        "type": "object"
+      },
+      "TripOut": {
+        "properties": {
+          "can_request": {
+            "description": "Whether the viewer may request this trip",
+            "title": "Can Request",
+            "type": "boolean"
+          },
+          "cost_per_person": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Per Person"
+          },
+          "cost_shared": {
+            "title": "Cost Shared",
+            "type": "boolean"
+          },
+          "departs_at": {
+            "description": "Window start, ISO 8601 in the trip's timezone",
+            "format": "date-time",
+            "title": "Departs At",
+            "type": "string"
+          },
+          "females_only": {
+            "title": "Females Only",
+            "type": "boolean"
+          },
+          "from_place": {
+            "$ref": "#/components/schemas/PlaceOut"
+          },
+          "host": {
+            "$ref": "#/components/schemas/UserSummary"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "joining": {
+            "$ref": "#/components/schemas/Joining"
+          },
+          "passenger_seats": {
+            "title": "Passenger Seats",
+            "type": "integer"
+          },
+          "pickup": {
+            "title": "Pickup",
+            "type": "string"
+          },
+          "seats_left": {
+            "title": "Seats Left",
+            "type": "integer"
+          },
+          "seats_taken": {
+            "title": "Seats Taken",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TripStatus"
+          },
+          "tag": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "to_place": {
+            "$ref": "#/components/schemas/PlaceOut"
+          },
+          "vehicle": {
+            "title": "Vehicle",
+            "type": "string"
+          },
+          "window_ends_at": {
+            "format": "date-time",
+            "title": "Window Ends At",
+            "type": "string"
+          },
+          "window_minutes": {
+            "title": "Window Minutes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "tag",
+          "from_place",
+          "to_place",
+          "pickup",
+          "departs_at",
+          "window_ends_at",
+          "timezone",
+          "window_minutes",
+          "passenger_seats",
+          "seats_taken",
+          "seats_left",
+          "vehicle",
+          "cost_per_person",
+          "cost_shared",
+          "joining",
+          "females_only",
+          "status",
+          "host",
+          "can_request"
+        ],
+        "title": "TripOut",
+        "type": "object"
+      },
+      "TripRequestOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "host": {
+            "$ref": "#/components/schemas/UserSummary"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/UserSummary"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "trip_id": {
+            "format": "uuid",
+            "title": "Trip Id",
+            "type": "string"
+          },
+          "trip_title": {
+            "title": "Trip Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "trip_id",
+          "trip_title",
+          "requester",
+          "host",
+          "message",
+          "status",
+          "created_at",
+          "decided_at"
+        ],
+        "title": "TripRequestOut",
+        "type": "object"
+      },
+      "TripStatus": {
+        "enum": [
+          "open",
+          "full",
+          "cancelled",
+          "completed"
+        ],
+        "title": "TripStatus",
+        "type": "string"
+      },
+      "UserSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "UserSummary",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Yalla API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/v1/auth/otp/request": {
+      "post": {
+        "operationId": "request_otp_v1_auth_otp_request_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpRequested"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Otp",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/v1/auth/otp/verify": {
+      "post": {
+        "operationId": "verify_otp_v1_auth_otp_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerify"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tokens"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Verify Otp",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "operationId": "refresh_v1_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tokens"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/v1/events": {
+      "get": {
+        "operationId": "list_events_v1_events_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "city",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EventOut"
+                  },
+                  "title": "Response List Events V1 Events Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Events",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{event_id}/rides": {
+      "get": {
+        "operationId": "event_rides_v1_events__event_id__rides_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "event_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Event Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "schema": {
+              "default": "to_event",
+              "enum": [
+                "to_event",
+                "from_event"
+              ],
+              "title": "Direction",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TripOut"
+                  },
+                  "title": "Response Event Rides V1 Events  Event Id  Rides Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Event Rides",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "operationId": "get_me_v1_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Me",
+        "tags": [
+          "me"
+        ]
+      },
+      "patch": {
+        "operationId": "update_me_v1_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Me",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/v1/me/alerts": {
+      "get": {
+        "operationId": "my_alerts_v1_me_alerts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AlertOut"
+                  },
+                  "title": "Response My Alerts V1 Me Alerts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My Alerts",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/v1/me/alerts/read": {
+      "post": {
+        "operationId": "mark_alerts_read_v1_me_alerts_read_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Mark Alerts Read",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/v1/me/requests": {
+      "get": {
+        "operationId": "my_requests_v1_me_requests_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "schema": {
+              "default": "sent",
+              "enum": [
+                "sent",
+                "received"
+              ],
+              "title": "Direction",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TripRequestOut"
+                  },
+                  "title": "Response My Requests V1 Me Requests Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My Requests",
+        "tags": [
+          "requests"
+        ]
+      }
+    },
+    "/v1/places/search": {
+      "get": {
+        "operationId": "search_v1_places_search_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": "",
+              "maxLength": 80,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "description": "'lat,lng' to rank by distance",
+            "in": "query",
+            "name": "near",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^-?\\d{1,2}(\\.\\d+)?,-?\\d{1,3}(\\.\\d+)?$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "'lat,lng' to rank by distance",
+              "title": "Near"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlaceOut"
+                  },
+                  "title": "Response Search V1 Places Search Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Search",
+        "tags": [
+          "places"
+        ]
+      }
+    },
+    "/v1/requests/{request_id}": {
+      "delete": {
+        "operationId": "cancel_v1_requests__request_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Request Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripRequestOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Cancel",
+        "tags": [
+          "requests"
+        ]
+      },
+      "patch": {
+        "operationId": "decide_v1_requests__request_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Request Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDecision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripRequestOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Decide",
+        "tags": [
+          "requests"
+        ]
+      }
+    },
+    "/v1/trips": {
+      "get": {
+        "operationId": "list_trips_v1_trips_get",
+        "parameters": [
+          {
+            "description": "Start near this place",
+            "in": "query",
+            "name": "from_place_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Start near this place",
+              "title": "From Place Id"
+            }
+          },
+          {
+            "description": "Destination near this place",
+            "in": "query",
+            "name": "to_place_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Destination near this place",
+              "title": "To Place Id"
+            }
+          },
+          {
+            "description": "'lat,lng', e.g. current location",
+            "in": "query",
+            "name": "from_near",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^-?\\d{1,2}(\\.\\d+)?,-?\\d{1,3}(\\.\\d+)?$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "'lat,lng', e.g. current location",
+              "title": "From Near"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to_near",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^-?\\d{1,2}(\\.\\d+)?,-?\\d{1,3}(\\.\\d+)?$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To Near"
+            }
+          },
+          {
+            "description": "Fallback: name contains",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Fallback: name contains",
+              "title": "From"
+            }
+          },
+          {
+            "description": "Fallback: name contains",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Fallback: name contains",
+              "title": "To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "radius_km",
+            "required": false,
+            "schema": {
+              "default": 3.0,
+              "exclusiveMinimum": 0,
+              "maximum": 50,
+              "title": "Radius Km",
+              "type": "number"
+            }
+          },
+          {
+            "description": "Minutes since midnight; +-60 min",
+            "in": "query",
+            "name": "time_min",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMaximum": 1440,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Minutes since midnight; +-60 min",
+              "title": "Time Min"
+            }
+          },
+          {
+            "description": "Local departure date at the pickup",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Local departure date at the pickup",
+              "title": "Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TripOut"
+                  },
+                  "title": "Response List Trips V1 Trips Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Trips",
+        "tags": [
+          "trips"
+        ]
+      },
+      "post": {
+        "operationId": "create_trip_v1_trips_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Trip",
+        "tags": [
+          "trips"
+        ]
+      }
+    },
+    "/v1/trips/{trip_id}": {
+      "get": {
+        "operationId": "get_trip_v1_trips__trip_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trip_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Trip Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Trip",
+        "tags": [
+          "trips"
+        ]
+      }
+    },
+    "/v1/trips/{trip_id}/requests": {
+      "post": {
+        "operationId": "request_to_join_v1_trips__trip_id__requests_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trip_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Trip Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripRequestOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Request To Join",
+        "tags": [
+          "requests"
+        ]
+      }
+    },
+    "/v1/trips/{trip_id}/save": {
+      "delete": {
+        "operationId": "unsave_trip_v1_trips__trip_id__save_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trip_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Trip Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Unsave Trip",
+        "tags": [
+          "trips"
+        ]
+      },
+      "put": {
+        "operationId": "save_trip_v1_trips__trip_id__save_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trip_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Trip Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Save Trip",
+        "tags": [
+          "trips"
+        ]
+      }
+    }
+  }
+}
