@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     log_json: bool = False
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:8081"]
 
+    database_url: str = "postgresql+asyncpg://yalla:yalla@localhost:5432/yalla"
+
 
 @lru_cache
 def get_settings() -> Settings:
