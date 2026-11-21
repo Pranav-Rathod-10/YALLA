@@ -48,6 +48,7 @@ class TripOut(Schema):
     females_only: bool
     status: TripStatus
     host: UserSummary
+    can_request: bool = Field(description="Whether the viewer may request this trip")
 
 
 class TripDetail(TripOut):

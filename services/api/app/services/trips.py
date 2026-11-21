@@ -14,6 +14,7 @@ from app.schemas.common import UserSummary
 from app.schemas.place import PlaceOut
 from app.schemas.trip import TripCreate, TripDetail, TripOut
 from app.schemas.trip_filters import TripFilters
+from app.services.eligibility import can_request
 from app.services.geo import LatLng, place_point, point, within
 from app.services.places import place_columns
 
@@ -35,7 +36,7 @@ async def _place(session: AsyncSession, place_id: uuid.UUID) -> PlaceOut:
     return PlaceOut.model_validate(row, from_attributes=True)
 
 
-async def _to_out(session: AsyncSession, trip: Trip) -> TripOut:
+async def _to_out(session: AsyncSession, trip: Trip, viewer: User) -> TripOut:
     host = await session.get(User, trip.host_id)
     if host is None:
         raise NotFoundError("Trip host not found.")
@@ -49,6 +50,7 @@ async def _to_out(session: AsyncSession, trip: Trip) -> TripOut:
         to_place=await _place(session, trip.to_place_id),
         seats_left=trip.passenger_seats - trip.seats_taken,
         host=UserSummary.model_validate(host),
+        can_request=can_request(viewer, trip),
     )
 
 
@@ -83,7 +85,7 @@ async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> Tr
     await session.flush()
     session.add(TripMember(trip_id=trip.id, user_id=host.id, role=MemberRole.host))
     await session.commit()
-    return await _to_out(session, trip)
+    return await _to_out(session, trip, host)
 
 
 def _start_min() -> Any:
@@ -144,13 +146,13 @@ def filtered(stmt: Select[Trip], f: TripFilters) -> Select[Trip]:
     return stmt
 
 
-async def list_trips(session: AsyncSession, f: TripFilters) -> list[TripOut]:
+async def list_trips(session: AsyncSession, f: TripFilters, viewer: User) -> list[TripOut]:
     stmt = filtered(select(Trip), f).order_by(Trip.departs_at, Trip.id)
     trips = (await session.scalars(stmt)).all()
-    return [await _to_out(session, t) for t in trips]
+    return [await _to_out(session, t, viewer) for t in trips]
 
 
-async def get_trip(session: AsyncSession, trip_id: uuid.UUID) -> TripDetail:
+async def get_trip(session: AsyncSession, trip_id: uuid.UUID, viewer: User) -> TripDetail:
     trip = await session.get(Trip, trip_id)
     if trip is None:
         raise NotFoundError("Trip not found.")
@@ -160,7 +162,7 @@ async def get_trip(session: AsyncSession, trip_id: uuid.UUID) -> TripDetail:
         .where(TripMember.trip_id == trip_id)
         .order_by(case((TripMember.role == MemberRole.host, 0), else_=1), TripMember.joined_at)
     )
-    out = await _to_out(session, trip)
+    out = await _to_out(session, trip, viewer)
     return TripDetail(
         **out.model_dump(),
         travellers=[UserSummary.model_validate(r, from_attributes=True) for r in rows],

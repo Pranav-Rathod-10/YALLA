@@ -13,6 +13,7 @@ Versions follow [SemVer](https://semver.org).
 - Architecture, data flow, data model and API docs; ADRs 0001-0007 (YAL-006).
 - Feature tracker CSV, proposal template, contributing guide.
 - Join requests: send (optional 1024-char message), accept, decline, cancel, Sent/Received lists; instant join; row-locked seats (YAL-022).
+- Females only enforced on the server (visible to all, only women can request or instant-join); can_request on trip responses (YAL-023, ADR 0007).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).

@@ -15,6 +15,7 @@ from app.models import Trip, TripMember, TripRequest, User
 from app.models.enums import Joining, MemberRole, RequestStatus, TripStatus
 from app.schemas.common import UserSummary
 from app.schemas.request import TripRequestOut
+from app.services.eligibility import females_only_block
 
 LIVE = (RequestStatus.pending, RequestStatus.accepted)
 
@@ -74,6 +75,8 @@ async def create_request(
         raise TripClosedError("This trip is no longer taking requests.")
     if trip.departs_at <= datetime.now(UTC):
         raise TripClosedError("This trip has already left.")
+    if (blocked := females_only_block(user, trip)) is not None:
+        raise blocked
 
     req = TripRequest(trip_id=trip.id, requester_id=user.id, message=message or None)
     if trip.joining == Joining.instant:
