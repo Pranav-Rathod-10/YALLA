@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     access_token_minutes: int = 15
     refresh_token_days: int = 30
 
+    # ADR 0007: require gender_verified for Females only trips (off until verification exists).
+    females_only_require_verified: bool = False
+
 
 @lru_cache
 def get_settings() -> Settings:
