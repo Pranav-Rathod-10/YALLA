@@ -22,7 +22,7 @@ from app.models.enums import Joining, MemberRole, RequestStatus, TripStatus
 
 
 class Trip(UUIDPk, CreatedAt, Base):
-    """Fields follow spec sections 7.5, 11 and 12 as written."""
+    """A shared cab trip. See docs/architecture/data-model.md."""
 
     __tablename__ = "trips"
 
@@ -35,9 +35,9 @@ class Trip(UUIDPk, CreatedAt, Base):
     depart_date: Mapped[date] = mapped_column(Date)
     window_start: Mapped[time] = mapped_column(Time)
     window_minutes: Mapped[int] = mapped_column(SmallInteger)
-    # Spec 7.5: total = seats + 1 (host included), going starts at 1 (the host).
-    seats_total: Mapped[int] = mapped_column(SmallInteger)
-    going: Mapped[int] = mapped_column(SmallInteger, default=1)
+    # One seat model (YAL-B03): passengers only, the host is never counted.
+    passenger_seats: Mapped[int] = mapped_column(SmallInteger)
+    seats_taken: Mapped[int] = mapped_column(SmallInteger, default=0)
     vehicle: Mapped[str] = mapped_column(String(40), default="Cab")
     cost_per_person: Mapped[int | None] = mapped_column(Integer)
     cost_shared: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -49,8 +49,8 @@ class Trip(UUIDPk, CreatedAt, Base):
 
     __table_args__ = (
         CheckConstraint("window_minutes IN (15, 30)", name="window_minutes"),
-        CheckConstraint("seats_total BETWEEN 2 AND 4", name="seats_total"),
-        CheckConstraint("going BETWEEN 1 AND seats_total", name="going"),
+        CheckConstraint("passenger_seats BETWEEN 1 AND 3", name="passenger_seats"),
+        CheckConstraint("seats_taken BETWEEN 0 AND passenger_seats", name="seats_taken"),
         CheckConstraint("cost_per_person IS NULL OR cost_per_person >= 0", name="cost"),
         Index("ix_trips_status_date", "status", "depart_date"),
     )
