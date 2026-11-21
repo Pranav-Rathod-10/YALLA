@@ -1,10 +1,11 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Query, Response, status
+from fastapi import APIRouter, Depends, Response, status
 
 from app.api.deps import CurrentUser, SessionDep
 from app.schemas.trip import TripCreate, TripDetail, TripOut
+from app.schemas.trip_filters import TripFilters, trip_filters
 from app.services import trips
 
 router = APIRouter(prefix="/trips", tags=["trips"])
@@ -14,17 +15,9 @@ router = APIRouter(prefix="/trips", tags=["trips"])
 async def list_trips(
     session: SessionDep,
     _: CurrentUser,
-    to: Annotated[
-        str | None, Query(max_length=120, description="Destination name contains")
-    ] = None,
-    from_: Annotated[
-        str | None, Query(alias="from", max_length=120, description="Start point name contains")
-    ] = None,
-    time_min: Annotated[
-        int | None, Query(ge=0, lt=1440, description="Minutes since midnight; +-60 min")
-    ] = None,
+    filters: Annotated[TripFilters, Depends(trip_filters)],
 ) -> list[TripOut]:
-    return await trips.list_trips(session, to=to, from_=from_, time_min=time_min)
+    return await trips.list_trips(session, filters)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)

@@ -147,7 +147,7 @@ async def test_place_filters_match_by_distance(
 
     async def titles_from(**params: object) -> list[str]:
         r = await client.get("/v1/trips", params=params, headers=headers)
-        return [f"{t['from_place']['name']}->{t['to_place']['name']}" for t in r.json()]
+        return sorted(f"{t['from_place']['name']}->{t['to_place']['name']}" for t in r.json())
 
     candolim = str(places["Candolim"].id)
     assert await titles_from(from_place_id=candolim) == ["Calangute->Panjim"]

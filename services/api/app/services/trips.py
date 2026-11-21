@@ -12,6 +12,8 @@ from app.models.enums import MemberRole
 from app.schemas.common import UserSummary
 from app.schemas.place import PlaceOut
 from app.schemas.trip import TripCreate, TripDetail, TripOut
+from app.schemas.trip_filters import TripFilters
+from app.services.geo import LatLng, place_point, point, within
 from app.services.places import place_columns
 
 CURRENT_LOCATION = "current location"
@@ -81,34 +83,54 @@ def _start_min() -> Any:
     return func.extract("hour", Trip.window_start) * 60 + func.extract("minute", Trip.window_start)
 
 
-def filtered(
+def _place_filter(
     stmt: Select[Trip],
+    column: Any,
     *,
-    to: str | None,
-    from_: str | None,
-    time_min: int | None,
+    place_id: uuid.UUID | None,
+    near: LatLng | None,
+    text: str | None,
+    radius_km: float,
 ) -> Select[Trip]:
-    """Spec 7.3 filter rules, as written."""
-    to_p, from_p = aliased(Place), aliased(Place)
-    if to and to.strip().lower() != CURRENT_LOCATION:
-        stmt = stmt.join(to_p, to_p.id == Trip.to_place_id).where(to_p.name.icontains(to.strip()))
-    if from_ and from_.strip().lower() != CURRENT_LOCATION:
-        stmt = stmt.join(from_p, from_p.id == Trip.from_place_id).where(
-            from_p.name.icontains(from_.strip())
-        )
-    if time_min is not None:
+    """Match by distance (ADR 0003). Free text is only a fallback for clients without a place."""
+    place = aliased(Place)
+    if place_id is not None:
+        origin = place_point(place_id)
+    elif near is not None:
+        origin = point(near)
+    elif text and text.strip().lower() != CURRENT_LOCATION:
+        return stmt.join(place, place.id == column).where(place.name.icontains(text.strip()))
+    else:
+        return stmt
+    return stmt.join(place, place.id == column).where(within(place.location, origin, radius_km))
+
+
+def filtered(stmt: Select[Trip], f: TripFilters) -> Select[Trip]:
+    stmt = _place_filter(
+        stmt,
+        Trip.from_place_id,
+        place_id=f.from_place_id,
+        near=f.from_near,
+        text=f.from_text,
+        radius_km=f.radius_km,
+    )
+    stmt = _place_filter(
+        stmt,
+        Trip.to_place_id,
+        place_id=f.to_place_id,
+        near=f.to_near,
+        text=f.to_text,
+        radius_km=f.radius_km,
+    )
+    if f.time_min is not None:
         # Distance on a 24 h clock: 23:30 and 00:00 are 30 minutes apart, not 1410 (YAL-B01).
-        diff = func.abs(_start_min() - time_min)
+        diff = func.abs(_start_min() - f.time_min)
         stmt = stmt.where(func.least(diff, MINUTES_PER_DAY - diff) <= TIME_WINDOW_MIN)
     return stmt
 
 
-async def list_trips(
-    session: AsyncSession, *, to: str | None, from_: str | None, time_min: int | None
-) -> list[TripOut]:
-    stmt = filtered(select(Trip), to=to, from_=from_, time_min=time_min).order_by(
-        Trip.depart_date, Trip.window_start, Trip.id
-    )
+async def list_trips(session: AsyncSession, f: TripFilters) -> list[TripOut]:
+    stmt = filtered(select(Trip), f).order_by(Trip.depart_date, Trip.window_start, Trip.id)
     trips = (await session.scalars(stmt)).all()
     return [await _to_out(session, t) for t in trips]
 
