@@ -15,3 +15,27 @@ pnpm --filter @yalla/mobile start         # Expo dev server
 On a phone use your machine's LAN IP, e.g. `EXPO_PUBLIC_API_URL=http://192.168.1.20:8000`.
 
 Read `AGENTS.md` before using an AI agent here: Expo APIs change every SDK.
+
+## Android APK
+
+One-time (needs an Expo account):
+
+```bash
+cd apps/mobile
+npx eas-cli@latest login
+npx eas-cli@latest init        # links the project, writes extra.eas.projectId into app.json
+```
+
+Then build an installable APK on EAS (profile `preview` in `eas.json`):
+
+```bash
+npx eas-cli@latest build --platform android --profile preview
+```
+
+EAS prints a download link and QR code when the build finishes. Set the real API URL in
+`eas.json` → `build.preview.env.EXPO_PUBLIC_API_URL` first.
+
+From GitHub: add an `EXPO_TOKEN` repo secret, then run the **mobile** workflow manually
+(Actions → mobile → Run workflow).
+
+Local build without EAS (needs Android Studio / SDK): `npx expo run:android --variant release`.
