@@ -18,6 +18,7 @@ Versions follow [SemVer](https://semver.org).
 - Alerts for requests and decisions, mark as read, transactional outbox drained by an arq worker (YAL-025, ADR 0005).
 - make seed: demo places, users, trips and events across Goa, Mumbai, Bengaluru and Dubai (YAL-026).
 - @yalla/api-client generated from OpenAPI with pnpm gen:api; CI fails on drift (YAL-030, ADR 0004).
+- Thin web client (Vite + React): login, trips with filters, details and request, post a trip, requests, alerts (YAL-031).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).
