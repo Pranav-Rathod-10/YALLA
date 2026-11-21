@@ -24,5 +24,13 @@ Notifications (Alerts), Chat (not designed yet).
 
 ## Getting started
 
-Setup instructions land with the backend skeleton. See `CONTRIBUTING.md` for
-branch naming, commit style and the PR flow.
+```bash
+make dev && make seed                 # API on :8000 with demo data, docs at /docs
+pnpm install && pnpm --filter @yalla/web dev
+```
+
+Full setup, tests and configuration: [`docs/runbook.md`](docs/runbook.md).
+How it fits together: [`docs/architecture/application.md`](docs/architecture/application.md),
+[`docs/architecture/dataflow.md`](docs/architecture/dataflow.md).
+Roadmap and ownership: [`docs/tracker/features.csv`](docs/tracker/features.csv).
+Branches, commits, PRs: [`CONTRIBUTING.md`](CONTRIBUTING.md).
