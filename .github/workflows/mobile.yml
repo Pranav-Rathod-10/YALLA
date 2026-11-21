@@ -1,0 +1,52 @@
+name: mobile
+
+on:
+  pull_request:
+    paths: ["apps/mobile/**", "packages/**", ".github/workflows/mobile.yml", "pnpm-lock.yaml"]
+  workflow_dispatch:
+    inputs:
+      build_apk:
+        description: "Build an Android APK on EAS (needs the EXPO_TOKEN secret)"
+        type: boolean
+        default: true
+
+jobs:
+  check:
+    name: mobile / typecheck-bundle
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: npx expo-doctor
+      - run: npx expo export --platform android --output-dir /tmp/expo-export
+
+  apk:
+    name: mobile / eas-apk
+    if: github.event_name == 'workflow_dispatch' && inputs.build_apk
+    needs: check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: pnpm install --frozen-lockfile
+      - run: eas build --platform android --profile preview --non-interactive --no-wait
