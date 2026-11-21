@@ -136,3 +136,28 @@ async def test_concurrent_accepts_never_overbook(
     assert sorted(r.status_code for r in results) == [200, 409]
     detail = (await client.get(f"/v1/trips/{trip['id']}", headers=host)).json()
     assert detail["seats_taken"] == 1
+
+
+async def test_females_only_trips(client: AsyncClient, session: AsyncSession, login: Login) -> None:
+    """ADR 0007: visible to everyone, only women can request, including via instant join."""
+    trip, host = await setup_trip(client, session, login, females_only=True, joining="instant")
+    man = await login(RIDER, gender="male")
+    woman = await login(RIDER2, gender="female")
+    undisclosed = await login("+919800000004")
+
+    listed = (await client.get("/v1/trips", headers=man)).json()
+    assert [(t["females_only"], t["can_request"]) for t in listed] == [(True, False)]
+    assert (await client.get(f"/v1/trips/{trip['id']}", headers=woman)).json()["can_request"]
+
+    for headers in (man, undisclosed):
+        r = await client.post(f"/v1/trips/{trip['id']}/requests", json={}, headers=headers)
+        assert (r.status_code, r.json()["code"]) == (403, "females_only")
+    r = await client.post(f"/v1/trips/{trip['id']}/requests", json={}, headers=woman)
+    assert r.json()["status"] == "accepted"
+
+
+async def test_can_request_is_false_for_own_trip(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    trip, host = await setup_trip(client, session, login)
+    assert not (await client.get(f"/v1/trips/{trip['id']}", headers=host)).json()["can_request"]
