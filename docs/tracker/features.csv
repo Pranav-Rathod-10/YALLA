@@ -15,7 +15,7 @@ YAL-021,feat,Post list and view trips with filters,planned,Pranav,2026-11-21,spe
 YAL-022,feat,Request to join accept decline cancel,in_review,Pranav,2026-11-21,spec §7.4 §7.6 §8.4,Core of the product,Akash,feat/2026-11-21_dev_join-requests,,,,,
 YAL-023,feat,Females-only enforced on the server,in_review,Akash,2026-11-21,spec §13.14 / ADR-0007,A label alone lets anyone request,Akash,feat/2026-11-21_dev_females-only,,,,,Owner decision pending
 YAL-024,feat,Events and Home to Event ride search,in_review,Pranav,2026-11-21,spec §7.7,Social tab,Akash,feat/2026-11-21_dev_events,,,,,
-YAL-025,feat,Alerts with transactional outbox,planned,Pranav,2026-11-21,spec §7.8 / ADR-0005,Alerts tab and future push,Akash,,,,,,
+YAL-025,feat,Alerts with transactional outbox,in_review,Pranav,2026-11-21,spec §7.8 / ADR-0005,Alerts tab and future push,Akash,feat/2026-11-21_dev_alerts-outbox,,,,,
 YAL-026,chore,Multi-city seed data,planned,Akash,2026-11-21,YAL-001,Demo data beyond Goa,Akash,,,,,,
 YAL-030,feat,Generated TypeScript API client,planned,Akash,2026-11-21,ADR-0004,No type drift between Python and TS,Akash,,,,,,
 YAL-031,feat,Thin web client,planned,Akash,2026-11-21,discussion,Show the backend working in a browser,Pranav,,,,,,Pranav owns frontends
