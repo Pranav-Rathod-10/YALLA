@@ -12,10 +12,11 @@ from sqlalchemy.orm import aliased
 
 from app.core.errors import ConflictError, DomainError, ForbiddenError, NotFoundError
 from app.models import Trip, TripMember, TripRequest, User
-from app.models.enums import Joining, MemberRole, RequestStatus, TripStatus
+from app.models.enums import AlertKind, Joining, MemberRole, RequestStatus, TripStatus
 from app.schemas.common import UserSummary
 from app.schemas.request import TripRequestOut
 from app.services.eligibility import females_only_block
+from app.services.notifications import notify
 
 LIVE = (RequestStatus.pending, RequestStatus.accepted)
 
@@ -89,6 +90,15 @@ async def create_request(
     except IntegrityError as exc:  # partial unique index on live requests
         await session.rollback()
         raise DuplicateRequestError("You already requested this trip.") from exc
+    verb = "joined" if req.status == RequestStatus.accepted else "requested to join"
+    notify(
+        session,
+        user_id=trip.host_id,
+        actor_id=user.id,
+        kind=AlertKind.request,
+        trip_id=trip.id,
+        text=f"{verb} your {trip.title}",
+    )
     return req
 
 
@@ -111,6 +121,15 @@ async def decide_request(
         _take_seat(session, trip, req.requester_id)
     req.status = status
     req.decided_at = datetime.now(UTC)
+    accepted = status == RequestStatus.accepted
+    notify(
+        session,
+        user_id=req.requester_id,
+        actor_id=host.id,
+        kind=AlertKind.accepted if accepted else AlertKind.declined,
+        trip_id=trip.id,
+        text=f"{'accepted' if accepted else 'declined'} your request for {trip.title}",
+    )
     return req
 
 
