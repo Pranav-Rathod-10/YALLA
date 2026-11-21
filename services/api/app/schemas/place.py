@@ -8,5 +8,6 @@ class PlaceOut(Schema):
     name: str
     address: str
     city: str
+    timezone: str
     lat: float
     lng: float

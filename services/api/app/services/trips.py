@@ -1,6 +1,7 @@
 import uuid
-from datetime import date
+from datetime import UTC, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Select, case, delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -38,8 +39,12 @@ async def _to_out(session: AsyncSession, trip: Trip) -> TripOut:
     host = await session.get(User, trip.host_id)
     if host is None:
         raise NotFoundError("Trip host not found.")
+    tz = ZoneInfo(trip.timezone)
+    departs_at = trip.departs_at.astimezone(tz)
     return TripOut(
-        **{k: getattr(trip, k) for k in TripOut.model_fields if hasattr(Trip, k)},
+        **{k: getattr(trip, k) for k in TripOut.model_fields if hasattr(Trip, k)}
+        | {"departs_at": departs_at},
+        window_ends_at=departs_at + timedelta(minutes=trip.window_minutes),
         from_place=await _place(session, trip.from_place_id),
         to_place=await _place(session, trip.to_place_id),
         seats_left=trip.passenger_seats - trip.seats_taken,
@@ -48,10 +53,14 @@ async def _to_out(session: AsyncSession, trip: Trip) -> TripOut:
 
 
 async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> TripOut:
-    if data.depart_date < date.today():
-        raise PastDateError("Past dates cannot be posted.")
     to_place = await _place(session, data.to_place_id)
     from_place = await _place(session, data.from_place_id)
+    # The host enters local date and time at the pickup; store the instant (ADR 0006).
+    departs_at = datetime.combine(
+        data.depart_date, data.window_start, ZoneInfo(from_place.timezone)
+    )
+    if departs_at < datetime.now(UTC):
+        raise PastDateError("Past dates cannot be posted.")
     trip = Trip(
         host_id=host.id,
         title=data.title or f"Trip to {to_place.name}",
@@ -59,8 +68,8 @@ async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> Tr
         from_place_id=data.from_place_id,
         to_place_id=data.to_place_id,
         pickup=data.pickup or from_place.name,
-        depart_date=data.depart_date,
-        window_start=data.window_start,
+        departs_at=departs_at,
+        timezone=from_place.timezone,
         window_minutes=data.window_minutes,
         passenger_seats=data.passenger_seats,
         seats_taken=0,
@@ -78,8 +87,9 @@ async def create_trip(session: AsyncSession, host: User, data: TripCreate) -> Tr
 
 
 def _start_min() -> Any:
-    """Minutes since midnight of the window start (spec: startMin)."""
-    return func.extract("hour", Trip.window_start) * 60 + func.extract("minute", Trip.window_start)
+    """Minutes since local midnight of the window start (spec: startMin)."""
+    local = func.timezone(Trip.timezone, Trip.departs_at)
+    return func.extract("hour", local) * 60 + func.extract("minute", local)
 
 
 def _place_filter(
@@ -129,7 +139,7 @@ def filtered(stmt: Select[Trip], f: TripFilters) -> Select[Trip]:
 
 
 async def list_trips(session: AsyncSession, f: TripFilters) -> list[TripOut]:
-    stmt = filtered(select(Trip), f).order_by(Trip.depart_date, Trip.window_start, Trip.id)
+    stmt = filtered(select(Trip), f).order_by(Trip.departs_at, Trip.id)
     trips = (await session.scalars(stmt)).all()
     return [await _to_out(session, t) for t in trips]
 

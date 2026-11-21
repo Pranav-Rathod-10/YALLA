@@ -19,6 +19,7 @@ def place_columns() -> list[Any]:
         Place.name,
         Place.address,
         Place.city,
+        Place.timezone,
         func.ST_Y(geom).label("lat"),
         func.ST_X(geom).label("lng"),
     ]

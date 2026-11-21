@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import UTC, datetime
 
 import pytest
 from sqlalchemy.exc import IntegrityError
@@ -25,8 +25,8 @@ async def _trip(session: AsyncSession, **overrides: object) -> Trip:
         "from_place_id": a.id,
         "to_place_id": b.id,
         "pickup": "Bus stand",
-        "depart_date": date(2030, 1, 1),
-        "window_start": time(18, 0),
+        "departs_at": datetime(2030, 1, 1, 12, 30, tzinfo=UTC),
+        "timezone": "Asia/Kolkata",
         "window_minutes": 30,
         "passenger_seats": 2,
     }

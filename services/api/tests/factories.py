@@ -19,9 +19,17 @@ GOA = [
 
 
 async def add_place(
-    session: AsyncSession, name: str, address: str, city: str, lat: float, lng: float
+    session: AsyncSession,
+    name: str,
+    address: str,
+    city: str,
+    lat: float,
+    lng: float,
+    timezone: str = "Asia/Kolkata",
 ) -> Place:
-    place = Place(name=name, address=address, city=city, location=f"POINT({lng} {lat})")
+    place = Place(
+        name=name, address=address, city=city, timezone=timezone, location=f"POINT({lng} {lat})"
+    )
     session.add(place)
     await session.flush()
     return place

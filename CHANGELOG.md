@@ -19,3 +19,4 @@ Versions follow [SemVer](https://semver.org).
 
 ### Changed
 - Trips use passenger_seats (1-3, host excluded) and seats_taken; seats_total/going removed with a data migration (YAL-B03).
+- Trips store departs_at (instant) + timezone; API returns ISO 8601 local times and window_ends_at (YAL-B04, ADR 0006).

@@ -1,17 +1,15 @@
 import uuid
-from datetime import date, datetime, time
+from datetime import datetime
 
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
-    Date,
     DateTime,
     ForeignKey,
     Index,
     Integer,
     SmallInteger,
     String,
-    Time,
     text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
@@ -32,8 +30,9 @@ class Trip(UUIDPk, CreatedAt, Base):
     from_place_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("places.id"))
     to_place_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("places.id"))
     pickup: Mapped[str] = mapped_column(String(255))
-    depart_date: Mapped[date] = mapped_column(Date)
-    window_start: Mapped[time] = mapped_column(Time)
+    # Start of the departure window as an instant, plus the pickup's IANA zone (ADR 0006).
+    departs_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    timezone: Mapped[str] = mapped_column(String(64))
     window_minutes: Mapped[int] = mapped_column(SmallInteger)
     # One seat model (YAL-B03): passengers only, the host is never counted.
     passenger_seats: Mapped[int] = mapped_column(SmallInteger)
@@ -52,7 +51,7 @@ class Trip(UUIDPk, CreatedAt, Base):
         CheckConstraint("passenger_seats BETWEEN 1 AND 3", name="passenger_seats"),
         CheckConstraint("seats_taken BETWEEN 0 AND passenger_seats", name="seats_taken"),
         CheckConstraint("cost_per_person IS NULL OR cost_per_person >= 0", name="cost"),
-        Index("ix_trips_status_date", "status", "depart_date"),
+        Index("ix_trips_status_departs_at", "status", "departs_at"),
     )
 
 

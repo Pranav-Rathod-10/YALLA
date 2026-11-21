@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Place
 from tests.conftest import Login
-from tests.factories import add_places
+from tests.factories import add_place, add_places
 
 TOMORROW = (date.today() + timedelta(days=1)).isoformat()
 
@@ -155,3 +155,26 @@ async def test_place_filters_match_by_distance(
     # "Current location using GPS": standing in Margao.
     assert await titles_from(from_near="15.2832,73.9862") == ["Margao->Panjim"]
     assert await titles_from(to_near="15.49,73.83") == ["Calangute->Panjim", "Margao->Panjim"]
+
+
+async def test_departure_is_stored_in_the_pickup_timezone(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    """YAL-B04 / ADR 0006: local 18:00 in Dubai is 14:00 UTC; the API answers in local time."""
+    places = await add_places(session)
+    places["Dubai Marina"] = await add_place(
+        session, "Dubai Marina", "Dubai Marina, Dubai", "Dubai", 25.0805, 55.1403, "Asia/Dubai"
+    )
+    await session.commit()
+    headers = await login()
+    trip = (
+        await client.post(
+            "/v1/trips", json=trip_body(places, "Dubai Marina", "Panjim"), headers=headers
+        )
+    ).json()
+    assert trip["timezone"] == "Asia/Dubai"
+    assert trip["departs_at"] == f"{TOMORROW}T18:00:00+04:00"
+    assert trip["window_ends_at"] == f"{TOMORROW}T18:30:00+04:00"
+    # The time filter works on local clock time at the pickup.
+    r = await client.get("/v1/trips", params={"time_min": 18 * 60}, headers=headers)
+    assert [t["title"] for t in r.json()] == ["Trip to Panjim"]
