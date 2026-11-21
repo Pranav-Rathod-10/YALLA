@@ -15,3 +15,4 @@ Versions follow [SemVer](https://semver.org).
 
 ### Fixed
 - Departure-time filter now wraps past midnight (YAL-B01).
+- Trip place filters match by distance (PostGIS) with text as fallback; place search can rank by distance (YAL-B02).

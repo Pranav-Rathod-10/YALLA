@@ -134,3 +134,24 @@ async def test_time_filter_wraps_past_midnight(
     assert [t["title"] for t in r.json()] == ["Trip to Panjim"]
     r = await client.get("/v1/trips", params={"time_min": 22 * 60 + 30}, headers=headers)
     assert r.json() == []
+
+
+async def test_place_filters_match_by_distance(
+    client: AsyncClient, session: AsyncSession, login: Login
+) -> None:
+    """YAL-B02: Candolim is ~3 km from Calangute; text matching can never connect them."""
+    places = await add_places(session)
+    headers = await login()
+    await client.post("/v1/trips", json=trip_body(places, "Calangute", "Panjim"), headers=headers)
+    await client.post("/v1/trips", json=trip_body(places, "Margao", "Panjim"), headers=headers)
+
+    async def titles_from(**params: object) -> list[str]:
+        r = await client.get("/v1/trips", params=params, headers=headers)
+        return sorted(f"{t['from_place']['name']}->{t['to_place']['name']}" for t in r.json())
+
+    candolim = str(places["Candolim"].id)
+    assert await titles_from(from_place_id=candolim) == ["Calangute->Panjim"]
+    assert await titles_from(from_place_id=candolim, radius_km=1) == []
+    # "Current location using GPS": standing in Margao.
+    assert await titles_from(from_near="15.2832,73.9862") == ["Margao->Panjim"]
+    assert await titles_from(to_near="15.49,73.83") == ["Calangute->Panjim", "Margao->Panjim"]
