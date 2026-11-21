@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import auth, health, me, places, trips
+from app.api.v1 import auth, health, me, places, requests, trips
 from app.core.config import get_settings
 from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging
@@ -21,7 +21,7 @@ def create_app() -> FastAPI:
     )
     register_error_handlers(app)
     app.include_router(health.router)
-    for router in (auth.router, me.router, places.router, trips.router):
+    for router in (auth.router, me.router, places.router, trips.router, requests.router):
         app.include_router(router, prefix="/v1")
     return app
 
