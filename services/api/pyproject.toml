@@ -13,6 +13,8 @@ dependencies = [
   "asyncpg>=0.30",
   "alembic>=1.14",
   "geoalchemy2>=0.16",
+  "pyjwt>=2.10",
+  "redis>=5.2",
 ]
 
 [dependency-groups]
