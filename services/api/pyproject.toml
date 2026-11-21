@@ -23,8 +23,8 @@ dev = [
   "pytest-asyncio>=0.24",
   "httpx>=0.28",
   "mypy>=1.13",
-  "ruff>=0.8",
-  "black>=24.10",
+  "ruff==0.8.0",  # keep in sync with .pre-commit-config.yaml
+  "black==24.10.0",  # keep in sync with .pre-commit-config.yaml
 ]
 
 [build-system]
